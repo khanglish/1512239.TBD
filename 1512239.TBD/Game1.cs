@@ -13,7 +13,7 @@ namespace _1512239.TBD
         SpriteBatch spriteBatch;
 
         Map map;
-
+        Player player;
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -29,7 +29,7 @@ namespace _1512239.TBD
         protected override void Initialize()
         {
             map = new Map();
-
+            player = new Player();
             base.Initialize();
         }
 
@@ -43,11 +43,12 @@ namespace _1512239.TBD
             spriteBatch = new SpriteBatch(GraphicsDevice);
             Tiles.Content = Content;
             map.Generate(new int[,]{
-                { 0,0,0,1,1,1,1,1,1,1,0,0},
-                { 0,0,1,2,2,2,2,2,2,2,1,0},
-                { 0,1,2,2,2,2,2,2,2,2,2,1},
-                { 1,2,2,2,2,2,2,2,2,2,2,2},
+                { 0,0,0,0,0,1,1,1,1,0,0},
+                { 1,0,0,0,1,2,2,2,2,1,0},
+                { 2,1,0,1,2,2,2,2,2,2,1},
+                { 2,2,1,2,2,2,2,2,2,2,2},
             },64);
+            player.Load(Content);
         }
 
         /// <summary>
@@ -68,6 +69,9 @@ namespace _1512239.TBD
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
+            player.Update(gameTime);
+            foreach (CollisionTiles tile in map.CollisionTiles)
+                player.Collision(tile.Rectangle, map.Width, map.Height);
 
             // TODO: Add your update logic here
 
@@ -83,6 +87,7 @@ namespace _1512239.TBD
             GraphicsDevice.Clear(Color.CornflowerBlue);
             spriteBatch.Begin();
             map.Draw(spriteBatch);
+            player.Draw(spriteBatch);
             spriteBatch.End();
             base.Draw(gameTime);
         }
