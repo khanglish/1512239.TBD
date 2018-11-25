@@ -12,6 +12,8 @@ namespace _1512239.TBD
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
+        Map map;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -26,7 +28,7 @@ namespace _1512239.TBD
         /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
+            map = new Map();
 
             base.Initialize();
         }
@@ -39,8 +41,13 @@ namespace _1512239.TBD
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
-            // TODO: use this.Content to load your game content here
+            Tiles.Content = Content;
+            map.Generate(new int[,]{
+                { 0,0,0,1,1,1,1,1,1,1,0,0},
+                { 0,0,1,2,2,2,2,2,2,2,1,0},
+                { 0,1,2,2,2,2,2,2,2,2,2,1},
+                { 1,2,2,2,2,2,2,2,2,2,2,2},
+            },64);
         }
 
         /// <summary>
@@ -74,9 +81,9 @@ namespace _1512239.TBD
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-
-            // TODO: Add your drawing code here
-
+            spriteBatch.Begin();
+            map.Draw(spriteBatch);
+            spriteBatch.End();
             base.Draw(gameTime);
         }
     }

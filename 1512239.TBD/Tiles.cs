@@ -40,7 +40,7 @@ namespace _1512239.TBD
     {
         public CollisionTiles(int i , Rectangle newRectangle)
         {
-            texture = Content.Load<Texture2D>("Tile" + i);
+            texture = Content.Load<Texture2D>("Map/dirt" + i);
             this.Rectangle = newRectangle;
         }
     }
