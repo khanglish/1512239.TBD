@@ -11,7 +11,7 @@ namespace _1512239.TBD
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-
+        Camera camera;
         Map map;
         Player player;
         public Game1()
@@ -43,12 +43,18 @@ namespace _1512239.TBD
             spriteBatch = new SpriteBatch(GraphicsDevice);
             Tiles.Content = Content;
             map.Generate(new int[,]{
-                { 0,0,0,0,0,1,1,1,1,0,0},
-                { 1,0,0,0,1,2,2,2,2,1,0},
-                { 2,1,0,1,2,2,2,2,2,2,1},
-                { 2,2,1,2,2,2,2,2,2,2,2},
-            },64);
+                {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                {2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                {2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                {2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1},
+                {2,1,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,1,2,2},
+                {2,2,1,0,0,0,0,0,0,1,2,2,2,2,2,0,0,0,0,1,1,2,2,2},
+                {2,0,0,0,0,0,1,1,1,2,2,2,2,0,0,0,0,0,1,2,2,2,2,2},
+                {2,0,0,0,1,1,2,2,2,2,2,2,2,1,1,1,1,1,2,2,2,2,2,2},
+                {2,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2}
+            }, 64);
             player.Load(Content);
+            camera = new Camera(GraphicsDevice.Viewport);
         }
 
         /// <summary>
@@ -71,8 +77,10 @@ namespace _1512239.TBD
                 Exit();
             player.Update(gameTime);
             foreach (CollisionTiles tile in map.CollisionTiles)
+            {
                 player.Collision(tile.Rectangle, map.Width, map.Height);
-
+                camera.Update(player.Position, map.Width, map.Height);
+            }
             // TODO: Add your update logic here
 
             base.Update(gameTime);
@@ -85,7 +93,7 @@ namespace _1512239.TBD
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-            spriteBatch.Begin();
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, camera.Transform);
             map.Draw(spriteBatch);
             player.Draw(spriteBatch);
             spriteBatch.End();
